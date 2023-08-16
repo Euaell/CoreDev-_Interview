@@ -9,7 +9,7 @@ router.get("/", Authenticate.authenticate, TaskController.getTasks)
 router.get("/mytasks", Authenticate.authenticate, TaskController.getMyTasks)
 router.get("/assigened", Authenticate.authenticate, TaskController.getAssignedTasks)
 router.get("/:id", Authenticate.authenticate, TaskController.getTask)
-router.put("/:id", Authenticate.authenticate, TaskController.updateTask)
-router.delete("/:id", Authenticate.authenticate, TaskController.deleteTask)
+router.put("/:id", Authenticate.authenticate, Authenticate.authorizeTask, TaskController.updateTask)
+router.delete("/:id", Authenticate.authenticate, Authenticate.authorizeTask, TaskController.deleteTask)
 
 export default router

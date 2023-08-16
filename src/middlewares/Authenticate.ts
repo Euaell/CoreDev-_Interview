@@ -1,6 +1,7 @@
 import { Request, Response, NextFunction } from "express"
 import UserModel, { IUser } from "../models/UserModel"
 import TaskModel, { ITasks } from "../models/TaskModel"
+import ProjectModel, {IProject} from "../models/ProjectModel";
 
 export default class Authenticate {
     public static async authenticate( req: Request, res: Response, next: NextFunction ): Promise<void> {
@@ -30,6 +31,10 @@ export default class Authenticate {
         try {
             const user = req.body.user
             const { id: taskId } = req.params
+            // check if id is valid
+            if (!taskId.match(/^[0-9a-fA-F]{24}$/)) {
+                throw new Error("Invalid id")
+            }
             const task: ITasks = await TaskModel.findById(taskId)
 
             if (!task) {
@@ -48,6 +53,27 @@ export default class Authenticate {
     }
 
     public static async authorizeProject( req: Request, res: Response, next: NextFunction ): Promise<void> {
+        try {
+            const user = req.body.user
+            const { id: projectId } = req.params
+            // check if id is valid
+            if (!projectId.match(/^[0-9a-fA-F]{24}$/)) {
+                throw new Error("Invalid id")
+            }
+            const project: IProject = await ProjectModel.findById(projectId)
 
+            if (!project) {
+                throw new Error("Project not found")
+            }
+
+            if (project.Owner.toString() !== user._id.toString()) {
+                throw new Error("You are not authorized to perform this action")
+            }
+
+            req.body.project = project
+            next()
+        } catch (error) {
+            next(error)
+        }
     }
 }

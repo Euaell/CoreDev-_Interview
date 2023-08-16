@@ -1,6 +1,6 @@
 import { Request, Response, NextFunction } from "express"
-import TaskModel, { ITasks, EnumStatus, EnumPriority } from "../models/TaskModel"
-import UserModel from "../models/UserModel"
+import TaskModel, { ITasks } from "../models/TaskModel"
+
 
 export default class TaskController {
     public static async createTask(req: Request, res: Response, next: NextFunction): Promise<Response> {
@@ -17,7 +17,7 @@ export default class TaskController {
     public static async getTasks(req: Request, res: Response, next: NextFunction): Promise<Response> {
         try {
             const tasks = await TaskModel.find()
-            return res.status(200).json({ tasks })
+            return res.status(200).json({ tasks, total: tasks.length })
         } catch (error) {
             next(error)
         }
@@ -26,7 +26,10 @@ export default class TaskController {
     public static async getTask(req: Request, res: Response, next: NextFunction) {
         try {
             const { id } = req.params
-            const task = await TaskModel.findById(id)
+            // check if id is valid
+            if (!id.match(/^[0-9a-fA-F]{24}$/)) return res.status(400).json({ message: "Invalid id" })
+            const task: ITasks = await TaskModel.findById(id)
+            if (!task) return res.status(404).json({ message: "Task not found" })
             res.status(200).json({ task })
         } catch (error) {
             next(error)
@@ -37,7 +40,7 @@ export default class TaskController {
         try {
             const { _id } = req.body.user
             const tasks: ITasks[] = await TaskModel.find({ Creator: _id })
-            return res.status(200).json({ tasks })
+            return res.status(200).json({ tasks, total: tasks.length })
         } catch (error) {
             next(error)
         }
@@ -68,7 +71,7 @@ export default class TaskController {
     public static async getAssignedTasks(req: Request, res: Response, next: NextFunction): Promise<Response> {
         try {
             const Tasks: ITasks[] = await TaskModel.find({ Assignee: req.body.user._id })
-            return res.status(200).json({ Tasks })
+            return res.status(200).json({ Tasks, total: Tasks.length })
         } catch (error) {
             next(error)
         }
