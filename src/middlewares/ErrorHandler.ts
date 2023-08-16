@@ -17,6 +17,13 @@ export const ErrorHandler = (err: Error, req: Request, res: Response, next: Next
     if (err.message === "Invalid id") {
         return res.status(400).json({ message: "Invalid id" })
     }
+    if (err.message === "Unauthorized") {
+        return res.status(401).json({ message: "Unauthorized" })
+    }
+    // check if error is a mongoose validation error
+    if (err.name === "ValidationError") {
+        return res.status(400).json({ message: err.message })
+    }
     if (res.headersSent) {
         return next(err)
     }

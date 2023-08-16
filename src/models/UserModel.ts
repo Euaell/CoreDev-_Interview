@@ -26,11 +26,17 @@ const UserSchema: Schema<IUser> = new Schema(
         Email: {
             type: String,
             required: true,
-            unique: true
+            unique: true,
+            validate: {
+                validator: (email: string) => {
+                    return /^([\w-\.]+@([\w-]+\.)+[\w-]{2,4})?$/.test(email)
+                }
+            }
         },
         Password: {
             type: String,
-            required: true
+            required: true,
+            minlength: 6
         }
     },
     {
