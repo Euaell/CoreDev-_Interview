@@ -1,7 +1,7 @@
 import { Request, Response, NextFunction } from "express"
 
 export const ErrorHandler = (err: Error, req: Request, res: Response, next: NextFunction) => {
-    // console.log(err)
+    console.log(err)
     if (err.message === "Invalid token") {
         return res.status(401).json({ message: "Unauthorized" })
     }

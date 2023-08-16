@@ -8,7 +8,7 @@ router.post("/", Authenticate.authenticate, ProjectController.createProject)
 
 router.get("/", ProjectController.getProjects)
 router.get("/myprojects", Authenticate.authenticate, ProjectController.getMyProjects)
-router.get("/getTasks/:id", Authenticate.authenticate, ProjectController.getTasks)
+router.get("/getTasks/:id", Authenticate.authenticate, Authenticate.authorizeProject, ProjectController.getTasks)
 router.get("/:id", Authenticate.authenticate, ProjectController.getProject)
 
 router.put("/addTask/:id", Authenticate.authenticate, Authenticate.authorizeProject, ProjectController.assignTask)

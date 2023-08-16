@@ -41,7 +41,7 @@ export default class Authenticate {
                 throw new Error("Task not found")
             }
 
-            if (task.Creator.toString() !== user._id.toString() || task.Assignee.toString() !== user._id.toString()) {
+            if (task.Creator.toString() !== user._id.toString() && !task.Assignee && task.Assignee.toString() !== user._id.toString()) {
                 throw new Error("You are not authorized to perform this action")
             }
 
