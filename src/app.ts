@@ -18,7 +18,9 @@ app.use(cors({
     exposedHeaders: ["token"]
 }))
 
-app.use("/api/v1/users", routes.UserRoute)
+app.use("/users", routes.UserRoute)
+app.use("/tasks", routes.TaskRoute)
+app.use("/projects", routes.ProjectRoute)
 
 app.get("/", (req: Request, res: Response, next: NextFunction) => {
     res.status(200).json({ message: "Hello World!" })

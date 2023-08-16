@@ -13,6 +13,11 @@ export default class UserController {
 
     public static async getUser( req: Request, res: Response, next: NextFunction ): Promise<Response> {
         try {
+            const { id } = req.params
+            // check if id is valid
+            if (!id.match(/^[0-9a-fA-F]{24}$/)) {
+                return res.status(400).json({message: "Invalid id"})
+            }
             const user: IUser | null = await UserModel.findById(req.params.id)
             if (user) {
                 return res.status(200).json({user})

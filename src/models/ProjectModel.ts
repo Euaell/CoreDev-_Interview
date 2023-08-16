@@ -29,10 +29,10 @@ const ProjectSchema: Schema<IProject> = new Schema(
             ref: "Task",
             default: []
         }]
-        },
-        {
-            timestamps: true
-        }
+    },
+    {
+        timestamps: true
+    }
 )
 
 export default model<IProject>("Project", ProjectSchema)
